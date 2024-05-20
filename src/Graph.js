@@ -20,7 +20,7 @@ class Edge {
 }
 
 class WeightedEdge extends Edge {
-    constructor(next = null, weight = 1) {
+    constructor(next = null, weight) {
         super(next);
         this.weight = weight;
     }
@@ -31,29 +31,33 @@ class Graph {
     constructor() {
         this.vertices = {};
     }
-    set edgeClass(newEdgeClass) {
+    
+    set edgeClass(newEdgeClass){
         this._edgeClass = newEdgeClass;
     }
+
     insertVertex(key, data) {
         if (this.vertices[key]) {
             throw new Error(`Vertex ${key} already exists.`);
         }
         this.vertices[key] = new Vertex(data);
     }
-    _createEdge(edgeKey) {
-        return new this._edgeClass(edgeKey);
+    _createEdgeInstance(...edgeData) {
+        return new this._edgeClass(...edgeData);
     }
 
-    insertEdge(key, ...edgeData) {
+    insertEdges(key, edgeKeys) {
         if (!this.vertices[key]) {
             throw new Error(`Vertex ${key} does not exist.`);
         }
 
-        edgeData.forEach((edgeKey) => {
+        edgeKeys.forEach(([edgeKey, ...args]) => {
             if (!this.vertices[edgeKey]) {
                 throw new Error(`Vertex ${edgeKey} does not exist.`);
             }
-            this.vertices[key].addEdge(this._createEdge(edgeKey));
+            this.vertices[key].addEdge(
+                this._createEdgeInstance(edgeKey, ...args)
+            );
         });
     }
     breadthSearch(start, end) {
@@ -93,26 +97,36 @@ class WeightedGraph extends Graph {
         super();
         this.edgeClass = WeightedEdge;
     }
+    insertEdges(key, edgesData) {
+        super.insertEdges.apply(this, [key, Object.entries(edgesData)]);
+    }
 }
 
-// const graph = new Graph();
-// graph.insertVertex("a", "A");
-// graph.insertVertex("b", "B");
-// graph.insertVertex("c", "C");
-// graph.insertVertex("d", "D");
-// graph.insertVertex("e", "E");
-// graph.insertVertex("f", "F");
-// graph.insertVertex("g", "G");
+const graph = new Graph();
+graph.insertVertex("a", "A");
+graph.insertVertex("b", "B");
+graph.insertVertex("c", "C");
+graph.insertVertex("d", "D");
+graph.insertVertex("e", "E");
+graph.insertVertex("f", "F");
+graph.insertVertex("g", "G");
 
-// graph.insertEdge("a", "b", "c");
-// graph.insertEdge("b", "f");
-// graph.insertEdge("c", "d", "e");
-// graph.insertEdge("d", "f");
-// graph.insertEdge("e", "f");
-// graph.insertEdge("f", "g");
+graph.insertEdges("a", ["b", "c"]);
+graph.insertEdges("b", ["f"]);
+graph.insertEdges("c", ["d", "e"]);
+graph.insertEdges("d", ["f"]);
+graph.insertEdges("e", ["f"]);
+graph.insertEdges("f", ["g"]);
 
-// console.log(graph.breadthSearch("a", "g"));
+console.log(graph.breadthSearch("a", "g"));
 
 const weightedGraph = new WeightedGraph();
 
-weightedGraph.insertEdge;
+weightedGraph.insertVertex("a", "April");
+weightedGraph.insertVertex("d", "Day");
+weightedGraph.insertVertex("f", "Fells");
+weightedGraph.insertVertex("g", "Great");
+
+weightedGraph.insertEdges("a", { d: 2, f: 3, g: 7 });
+
+console.log(weightedGraph.vertices["a"].edges);
