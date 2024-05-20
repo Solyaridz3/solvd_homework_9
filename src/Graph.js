@@ -1,5 +1,4 @@
 //@ts-check
-
 class Vertex {
     constructor(data) {
         this.data = data;
@@ -31,8 +30,8 @@ class Graph {
     constructor() {
         this.vertices = {};
     }
-    
-    set edgeClass(newEdgeClass){
+
+    set edgeClass(newEdgeClass) {
         this._edgeClass = newEdgeClass;
     }
 
@@ -41,9 +40,6 @@ class Graph {
             throw new Error(`Vertex ${key} already exists.`);
         }
         this.vertices[key] = new Vertex(data);
-    }
-    _createEdgeInstance(...edgeData) {
-        return new this._edgeClass(...edgeData);
     }
 
     insertEdges(key, edgeKeys) {
@@ -59,6 +55,10 @@ class Graph {
                 this._createEdgeInstance(edgeKey, ...args)
             );
         });
+    }
+
+    _createEdgeInstance(...edgeData) {
+        return new this._edgeClass(...edgeData);
     }
     breadthSearch(start, end) {
         if (!this.vertices[start] || !this.vertices[end]) {

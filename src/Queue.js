@@ -3,11 +3,14 @@ import { ListNode } from "./LinkedList.js";
 
 // Linked List queue realization
 // enqueue, dequeue complexity is O(1)
-class Queue {
+export class Queue {
     constructor() {
         this.head = null;
         this.tail = null;
         this.length = 0;
+    }
+    isEmpty() {
+        return this.length === 0;
     }
     enqueue(element) {
         const newNode = new ListNode(element);
@@ -26,12 +29,12 @@ class Queue {
         if (currentHead !== null) {
             this.head = currentHead.next ? currentHead.next : null;
             this.length--;
-            return currentHead;
+            return currentHead.element;
         }
         return null;
     }
     peek() {
-        return this.head;
+        return this.head.element;
     }
 
     _print() {
@@ -49,16 +52,4 @@ class Queue {
     }
 }
 
-const q = new Queue();
 
-q.enqueue(1);
-q.enqueue(0);
-q.enqueue(-1);
-
-console.log(q.peek());
-
-console.log(q.dequeue());
-console.log(q.dequeue());
-console.log(q.dequeue());
-console.log(q.length);
-console.log(q.dequeue());
