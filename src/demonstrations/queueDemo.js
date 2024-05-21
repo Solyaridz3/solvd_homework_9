@@ -6,6 +6,7 @@ q.enqueue(1);
 q.enqueue(0);
 q.enqueue(-1);
 
+
 console.log("Peek:", q.peek());
 
 while (!q.isEmpty()) {

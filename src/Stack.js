@@ -1,5 +1,5 @@
 //@ts-check
-class Stack {
+export class Stack {
     constructor() {
         this._items = [];
     }
@@ -17,7 +17,7 @@ class Stack {
     }
 }
 
-class MinMaxStack extends Stack {
+export class MinMaxStack extends Stack {
     constructor() {
         super();
         this._maxStack = [];
@@ -58,15 +58,3 @@ class MinMaxStack extends Stack {
     }
 }
 
-let stack = new MinMaxStack();
-stack.push(1);
-stack.push(2);
-stack.push(3);
-
-console.log("Max:", stack.getMax());
-console.log("Min:", stack.getMin());
-
-console.log("Popped:", stack.pop());
-
-console.log("Max:", stack.getMax());
-console.log("Min:", stack.getMin());

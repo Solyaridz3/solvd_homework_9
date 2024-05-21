@@ -91,6 +91,7 @@ export class LinkedList {
             this.length--;
             // If the list becomes empty after deletion
             if (this.length === 0) {
+                //@ts-ignore
                 this.tail = null;
             }
             return true;
@@ -121,7 +122,7 @@ export class LinkedList {
     _print() {
         let currentNode = this.head;
         if (!currentNode) {
-            console.log('List is empty');
+            console.log("List is empty");
             return;
         }
 
@@ -130,7 +131,6 @@ export class LinkedList {
             console.log(currentNode.element);
             currentNode = currentNode.next;
         }
-        console.log(`TAIL: ${this.tail ? this.tail.element : 'null'}`);
+        console.log(`TAIL: ${this.tail ? this.tail.element : "null"}`);
     }
 }
-
