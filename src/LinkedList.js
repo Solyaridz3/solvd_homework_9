@@ -115,6 +115,25 @@ export class LinkedList {
         this.length--;
         return true;
     }
+    // Floyd's Cycle Detection Algorithm
+    hasCycle() {
+        if (!this.head || !this.head.next) {
+            return false;
+        }
+
+        let slow = this.head;
+        let fast = this.head.next;
+
+        while (slow !== fast) {
+            if (!fast || !fast.next) {
+                return false;
+            }
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return true;
+    }
 
     /**
      * Prints the elements of the list.
