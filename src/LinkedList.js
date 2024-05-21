@@ -91,8 +91,8 @@ export class LinkedList {
             this.length--;
             // If the list becomes empty after deletion
             if (this.length === 0) {
-                //@ts-ignore
-                this.tail = null;
+                // @ts-ignore
+                his.tail = null;
             }
             return true;
         }

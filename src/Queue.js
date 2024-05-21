@@ -9,9 +9,20 @@ export class Queue {
         this.tail = null;
         this.length = 0;
     }
+    /**
+     * Checks if the queue is empty.
+     *
+     * @return {boolean} True if the queue is empty, false otherwise.
+     */
     isEmpty() {
         return this.length === 0;
     }
+    /**
+     * Adds an element to the end of the queue.
+     *
+     * @param {*} element - The element to be added to the queue.
+     * @return {Queue} - The updated queue.
+     */
     enqueue(element) {
         const newNode = new ListNode(element);
         if (this.tail === null) {
@@ -24,6 +35,11 @@ export class Queue {
         return this;
     }
 
+    /**
+     * Removes and returns the element at the front of the queue.
+     *
+     * @return {*} The element at the front of the queue, or null if the queue is empty.
+     */
     dequeue() {
         const currentHead = this.head;
         if (currentHead !== null) {
@@ -33,10 +49,18 @@ export class Queue {
         }
         return null;
     }
+    /**
+     * Returns the element at the front of the queue without removing it.
+     *
+     * @return {*} The element at the front of the queue.
+     */
     peek() {
         return this.head.element;
     }
 
+    /**
+     * Prints the elements of the queue.
+     */
     _print() {
         if (this.head === null || this.tail === null) {
             return console.log("Queue is empty");
