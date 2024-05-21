@@ -1,5 +1,9 @@
 // @ts-check
-// Floyd's Cycle Detection Algorithm
+/**
+ * Floyd's Cycle Detection Algorithm.
+ * @param head - Linked List head.
+ * @returns {boolean} - If Linked List has a cycle returns true, otherwise false.
+ */
 function hasCycle(head) {
     if (!head || !head.next) {
         return false;
