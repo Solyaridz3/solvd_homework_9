@@ -3,6 +3,9 @@ export class Stack {
     constructor() {
         this._items = [];
     }
+    get length(){
+        return this._items.length;
+    }
 
     /**
      * Removes and returns the last element from the stack.
@@ -36,8 +39,8 @@ export class Stack {
 export class MinMaxStack extends Stack {
     constructor() {
         super();
-        this._maxStack = [];
-        this._minStack = [];
+        this._maxStack = new Stack();
+        this._minStack = new Stack();
     }
 
     /**
@@ -46,7 +49,7 @@ export class MinMaxStack extends Stack {
      * @return {*} The maximum element from the stack.
      */
     getMax() {
-        return this._maxStack[this._maxStack.length - 1];
+        return this._maxStack.peek();
     }
 
     /**
@@ -55,7 +58,7 @@ export class MinMaxStack extends Stack {
      * @return {*} The minimum element from the stack.
      */
     getMin() {
-        return this._minStack[this._minStack.length - 1];
+        return this._minStack.peek();
     }
 
     /**
