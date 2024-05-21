@@ -18,6 +18,7 @@ graph.insertEdges("e", ["f"]);
 graph.insertEdges("f", ["g"]);
 
 console.log("Default graph breadthSearch:", graph.breadthSearch("a", "g"));
+console.log("Default graph depthsSearch:", graph.depthSearch("a", "g"));
 
 const weightedGraph = new WeightedGraph();
 

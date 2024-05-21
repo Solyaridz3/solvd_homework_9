@@ -1,4 +1,5 @@
 //@ts-check
+import {Stack} from './Stack.js';
 class Vertex {
     constructor(data) {
         this.data = data;
@@ -182,6 +183,49 @@ export class Graph {
 
         return { hasPath: false, path: null };
     }
+
+    /**
+     * Performs a depth-first search starting from the specified start vertex and ending at the specified end vertex.
+     *
+     * @param {string} start - The key of the start vertex.
+     * @param {string} end - The key of the end vertex.
+     * @return {Object} An object containing the following properties:
+     *   - hasPath: A boolean indicating whether a path from the start vertex to the end vertex was found.
+     *   - path: An array representing the path from the start vertex to the end vertex, or an empty array if no path was found.
+     * @throws {Error} If either the start vertex or the end vertex does not exist.
+     */
+    depthSearch(start, end) {
+        if (!this.vertices[start] || !this.vertices[end]) {
+            throw new Error(`One or both vertices do not exist.`);
+        }
+        // let stack = [[start, [start]]];
+        let stack = new Stack();
+        stack.push([start, [start]])
+        let visited = new Set();
+
+        while (stack.length > 0) {
+            //@ts-ignore
+            const [currentKey, path] = stack.pop(); 
+            if (visited.has(currentKey)) {
+                continue;
+            }
+            visited.add(currentKey);
+
+            for (let edge of this.vertices[currentKey].getEdges()) {
+                const nextKey = edge.next;
+
+                if (nextKey === end) {
+                    return { hasPath: true, path: [...path, nextKey] };
+                }
+
+                if (!visited.has(nextKey)) {
+                    stack.push([nextKey, [...path, nextKey]]); // Добавляем вершину в конец стека
+                }
+            }
+        }
+
+        return { hasPath: false, path: [] };
+    }
 }
 
 class WeightedEdge extends Edge {
@@ -277,5 +321,3 @@ export class WeightedGraph extends Graph {
         return lowestVertex;
     }
 }
-
-
