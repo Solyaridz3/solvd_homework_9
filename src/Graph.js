@@ -7,6 +7,9 @@ class Vertex {
     addEdge(edge) {
         this.edges.add(edge);
     }
+    getEdge(edgeTo) {
+        return this.getEdges().find((edge) => edge.next === edgeTo);
+    }
 
     getEdges() {
         return Array.from(this.edges);
@@ -15,13 +18,6 @@ class Vertex {
 class Edge {
     constructor(next = null) {
         this.next = next;
-    }
-}
-
-class WeightedEdge extends Edge {
-    constructor(next = null, weight) {
-        super(next);
-        this.weight = weight;
     }
 }
 
@@ -60,6 +56,32 @@ class Graph {
     _createEdgeInstance(...edgeData) {
         return new this._edgeClass(...edgeData);
     }
+
+    removeVertex(key) {
+        if (!this.vertices[key]) {
+            throw new Error(`Vertex ${key} does not exist.`);
+        }
+        delete this.vertices[key];
+        for (let vertexKey in this.vertices) {
+            this.vertices[vertexKey].edges = new Set(
+                [...this.vertices[vertexKey].getEdges()].filter(
+                    (edge) => edge.next !== key
+                )
+            );
+        }
+    }
+
+    removeEdge(key, edgeKey) {
+        if (!this.vertices[key] || !this.vertices[edgeKey]) {
+            throw new Error(`One or both vertices do not exist.`);
+        }
+        this.vertices[key].edges = new Set(
+            [...this.vertices[key].getEdges()].filter(
+                (edge) => edge.next !== edgeKey
+            )
+        );
+    }
+
     breadthSearch(start, end) {
         if (!this.vertices[start] || !this.vertices[end]) {
             throw new Error(`One or both vertices do not exist.`);
@@ -92,13 +114,66 @@ class Graph {
     }
 }
 
+class WeightedEdge extends Edge {
+    constructor(next = null, weight) {
+        super(next);
+        this.weight = weight;
+    }
+}
+
 class WeightedGraph extends Graph {
     constructor() {
         super();
         this.edgeClass = WeightedEdge;
     }
     insertEdges(key, edgesData) {
-        super.insertEdges.apply(this, [key, Object.entries(edgesData)]);
+        super.insertEdges(key, Object.entries(edgesData));
+    }
+
+    dijkstra(startKey) {
+        if (!this.vertices[startKey]) {
+            throw new Error(`Vertex ${startKey} does not exist.`);
+        }
+        const distances = {};
+        const processed = [];
+        let neighbors = [];
+        Object.keys(this.vertices).forEach((vertexKey) => {
+            if (vertexKey !== startKey) {
+                const edge = this.vertices[startKey].getEdge(vertexKey);
+                let distance = !edge ? Infinity : edge.weight;
+                distances[vertexKey] = distance;
+            }
+        });
+        let vertex = this.findVertexLowestDistance(distances, processed);
+        while (vertex) {
+            const distance = distances[vertex];
+            //@ts-ignore
+            neighbors = this.vertices[vertex].getEdges();
+            for (const { next: neighbor, weight } of neighbors) {
+                let newDistance = distance + weight;
+                //@ts-ignore
+                if (newDistance < distances[neighbor]) {
+                    //@ts-ignore
+                    distances[neighbor] = newDistance;
+                }
+            }
+            processed.push(vertex);
+            vertex = this.findVertexLowestDistance(distances, processed);
+        }
+        return distances;
+    }
+
+    findVertexLowestDistance(distances, processed) {
+        let lowestDistance = Infinity;
+        let lowestVertex;
+        Object.keys(distances).forEach((vertex) => {
+            let distance = distances[vertex];
+            if (distance < lowestDistance && !processed.includes(vertex)) {
+                lowestDistance = distance;
+                lowestVertex = vertex;
+            }
+        });
+        return lowestVertex;
     }
 }
 
@@ -118,15 +193,32 @@ graph.insertEdges("d", ["f"]);
 graph.insertEdges("e", ["f"]);
 graph.insertEdges("f", ["g"]);
 
-console.log(graph.breadthSearch("a", "g"));
+console.log("Default graph breadthSearch:", graph.breadthSearch("a", "g"));
 
 const weightedGraph = new WeightedGraph();
 
-weightedGraph.insertVertex("a", "April");
-weightedGraph.insertVertex("d", "Day");
-weightedGraph.insertVertex("f", "Fells");
-weightedGraph.insertVertex("g", "Great");
+weightedGraph.insertVertex("a", "ALLIGATOR");
+weightedGraph.insertVertex("b", "BAT");
+weightedGraph.insertVertex("c", "CAT");
+weightedGraph.insertVertex("d", "DOG");
+weightedGraph.insertVertex("f", "FROG");
+weightedGraph.insertVertex("g", "GIRAFFE");
 
-weightedGraph.insertEdges("a", { d: 2, f: 3, g: 7 });
+weightedGraph.insertEdges("a", { d: 2, f: 5, g: 7 });
+weightedGraph.insertEdges("d", { g: 2, f: 1, c: 10 });
+weightedGraph.insertEdges("g", { c: 2 });
 
+console.log("Weighted graph dijkstra algorithm:", weightedGraph.dijkstra("a"));
+console.log(
+    "Weighted graph breadth search",
+    weightedGraph.breadthSearch("a", "g")
+);
+
+//Initial weighted graph
+console.log(weightedGraph.vertices["a"].edges);
+
+weightedGraph.removeVertex("f");
+weightedGraph.removeEdge("a", "d");
+
+// Weighted graph after vertex and edge removal
 console.log(weightedGraph.vertices["a"].edges);
