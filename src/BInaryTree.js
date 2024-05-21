@@ -8,7 +8,7 @@ class TreeNode {
     }
 }
 
-class BinaryTree {
+export class BinaryTree {
     /**
      * @param {string} element
      * @param {number} key
@@ -92,30 +92,3 @@ class BinaryTree {
     }
 }
 
-const binaryTree = new BinaryTree("Fifty", 50);
-binaryTree.insert("Ten", 10);
-binaryTree.insert("Four", 4);
-binaryTree.insert("Twelve", 12);
-binaryTree.insert("Fifty One", 51);
-binaryTree.insert("Ninety Nine", 99);
-
-console.log("Found:", binaryTree.find(12));
-
-// Traversal example
-function arrayCreator() {
-    let arr = [];
-    return (e = null) => {
-        if (e !== null) {
-            arr.push(e);
-        } else {
-            return arr;
-        }
-    };
-}
-
-
-const createArr = arrayCreator();
-binaryTree.inOrderTraversal(createArr);
-const arr = createArr();
-console.log("arr is:", arr);
-binaryTree.preOrderTraversal(console.log);
