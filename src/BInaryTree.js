@@ -63,7 +63,7 @@ export class BinaryTree {
     _inOrderTraversal(currentPoint, callback) {
         if (currentPoint !== null) {
             this._inOrderTraversal(currentPoint.left, callback);
-            callback(currentPoint.element);
+            callback(currentPoint);
             this._inOrderTraversal(currentPoint.right, callback);
         }
     }
@@ -73,7 +73,7 @@ export class BinaryTree {
 
     _preOrderTraversal(currentPoint, callback) {
         if (currentPoint !== null) {
-            callback(currentPoint.element);
+            callback(currentPoint);
             this._preOrderTraversal(currentPoint.left, callback);
             this._preOrderTraversal(currentPoint.right, callback);
         }
@@ -87,7 +87,7 @@ export class BinaryTree {
         if (currentPoint !== null) {
             this._postOrderTraversal(currentPoint.left, callback);
             this._postOrderTraversal(currentPoint.right, callback);
-            callback(currentPoint.element);
+            callback(currentPoint);
         }
     }
 }
