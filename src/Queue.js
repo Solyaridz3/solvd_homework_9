@@ -79,8 +79,7 @@ export class Queue {
             currentNode = currentNode.next;
         }
         console.log(currentNode.element);
+        //@ts-ignore
         console.log(`TAIL ${this.tail.element}`);
     }
 }
-
-
