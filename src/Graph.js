@@ -1,5 +1,6 @@
 //@ts-check
-import {Stack} from './Stack.js';
+import { Queue } from "./Queue.js";
+import { Stack } from "./Stack.js";
 class Vertex {
     constructor(data) {
         this.data = data;
@@ -157,12 +158,14 @@ export class Graph {
         if (!this.vertices[start] || !this.vertices[end]) {
             throw new Error(`One or both vertices do not exist.`);
         }
-        let queue = [[start, [start]]];
+        let queue = new Queue();
+        queue.enqueue([start, [start]]);
         let visited = new Set();
 
-        while (queue.length > 0) {
+        while (!queue.isEmpty()) {
             //@ts-ignore
-            const [currentKey, path] = queue.shift();
+            const current = queue.dequeue();
+            const [currentKey, path] = current;
             if (visited.has(currentKey)) {
                 continue;
             }
@@ -176,7 +179,7 @@ export class Graph {
                 }
 
                 if (!visited.has(nextKey)) {
-                    queue.push([nextKey, [...path, nextKey]]);
+                    queue.enqueue([nextKey, [...path, nextKey]]);
                 }
             }
         }
@@ -200,12 +203,12 @@ export class Graph {
         }
         // let stack = [[start, [start]]];
         let stack = new Stack();
-        stack.push([start, [start]])
+        stack.push([start, [start]]);
         let visited = new Set();
 
         while (stack.length > 0) {
             //@ts-ignore
-            const [currentKey, path] = stack.pop(); 
+            const [currentKey, path] = stack.pop();
             if (visited.has(currentKey)) {
                 continue;
             }
@@ -219,7 +222,7 @@ export class Graph {
                 }
 
                 if (!visited.has(nextKey)) {
-                    stack.push([nextKey, [...path, nextKey]]); // Добавляем вершину в конец стека
+                    stack.push([nextKey, [...path, nextKey]]);
                 }
             }
         }
@@ -274,6 +277,7 @@ export class WeightedGraph extends Graph {
         const distances = {};
         const processed = [];
         let neighbors = [];
+
         Object.keys(this.vertices).forEach((vertexKey) => {
             if (vertexKey !== startKey) {
                 const edge = this.vertices[startKey].getEdge(vertexKey);
@@ -281,19 +285,19 @@ export class WeightedGraph extends Graph {
                 distances[vertexKey] = distance;
             }
         });
+
         let vertex = this.findVertexLowestDistance(distances, processed);
+
         while (vertex) {
             const distance = distances[vertex];
-            //@ts-ignore
             neighbors = this.vertices[vertex].getEdges();
             for (const { next: neighbor, weight } of neighbors) {
                 let newDistance = distance + weight;
-                //@ts-ignore
                 if (newDistance < distances[neighbor]) {
-                    //@ts-ignore
                     distances[neighbor] = newDistance;
                 }
             }
+
             processed.push(vertex);
             vertex = this.findVertexLowestDistance(distances, processed);
         }

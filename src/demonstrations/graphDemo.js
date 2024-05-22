@@ -39,6 +39,8 @@ console.log(
     weightedGraph.breadthSearch("a", "g")
 );
 
+console.log('Weighted graph depth search');
+
 //Initial weighted graph
 console.log(weightedGraph.vertices["a"].edges);
 
